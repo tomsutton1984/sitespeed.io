@@ -1,0 +1,32 @@
+---
+layout: default
+title: Sitespeed.io - How speedy is your site?
+description: Sitespeed.io will help you analyze the speedness of you site.
+keywords: sitespeed.io
+author: Peter Hedenskog
+nav: run
+---
+<div class="page-header">
+  <h1>How to run</h1>
+</div>
+
+<div class="row-fluid">
+  <div class="span12">
+    <h2>Standard (fetching one level of pages)</h2>
+    <p>
+      By default, sitespeed will crawl all the links that exist on the page, and fetch the pages that are on the same domain as the start.
+    </p>
+    <pre>$ ./sitespeed.io http://yoursite.com</pre>
+    <p>
+      Or of course, if you want to test a specific page
+      <pre>$ ./sitespeed.io http://yoursite.com/my/path</pre>
+    </p>
+    <h2>Fetching more than one level</h2>
+    <p>Add another parameter</p>
+    <pre>$ ./sitespeed.io http://yoursite.com 2</pre>
+
+    <h2>Fetching servers behind basic auth</h2>
+    <p>
+      Add login and password as next parameters. Note that you today always need to supply the crawl deep
+    </p>
+    <pre>$ ./sitespeed.io http://yoursite.com 1 login password</pre>

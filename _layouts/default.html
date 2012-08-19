@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>{{ page.title }}</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="{{ page.description }}">
+	<meta name="keywords" content="{{ page.keywords }}">
+	<meta name="author" content="{{ page.author }}">
+	<link rel="shortcut icon" href="/img/favicon.ico">
+
+	<style>{% include all.css %}</style>
+	{% include analythics %}
+</head>
+<body>
+	{% include header.html %}
+	<div class="container-fluid">
+		{{ content }}
+
+{% include footer.html %}
+	</div>
+	<!--ending the fluid-->
+	<!--<script src="/js/all.js"></script>-->
+</body>
+</html>

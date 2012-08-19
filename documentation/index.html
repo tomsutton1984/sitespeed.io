@@ -1,0 +1,123 @@
+---
+layout: default
+title: Sitespeed.io - How speedy is your site?
+description: Sitespeed.io will help you analyze the speedness of you site.
+keywords: sitespeed.io
+author: Peter Hedenskog
+nav: documentation
+---
+<div class="page-header">
+  <h1>
+    Documentation
+    <small>Example & workflow</small>
+  </h1>
+</div>
+
+<div class="section">
+  <div class="row-fluid">
+    <div class="span12">
+      <p>
+        Start the script:
+        <pre>$ ./sitespeed.io http://peterhedenskog.com</pre>
+      </p>
+      <p>
+        The script will log what is happening, it will look  something like this:
+        <pre>
+$ Will crawl from start point http://peterhedenskog.com with depth 1 ... this can take a while
+$ Will start fetching all a links ...
+$ http://peterhedenskog.com/
+$ http://peterhedenskog.com/category/work/
+$ ...
+$ Fetched 17 pages
+$ Analyzing http://peterhedenskog.com/
+$ ...
+$ Create individual pages
+$ Create the pages.html
+$ Create the summary: index.html
+$ Finished, see the report sitespeed-result/sitespeed-peterhedenskog.com-2012-08-15-20-18-48/index.html
+$
+</pre>
+      </p>
+      <p>
+        It will create the following directory structure (the first directory is named after the site you are testing and when the test was executed):
+        <pre>
+sitespeed-result
+|
+`--sitespeed-peterhedenskog.com-2012-08-15-20-18-48
+   |
+   | -- css
+   |
+   | -- data
+   |
+   | -- img
+   |
+   | -- js
+   |
+   | -- pages
+   |
+   | -- pages.html
+   ` -- index.html
+</pre>
+      </p>
+      <p>
+        The <strong>data</strong>
+        directory hold all xml files that's the result from the analyze (the raw data). <strong>Pages</strong>
+        hold the result (as HTML) for all unique page tests. The
+        <strong>pages.html</strong>
+        is all pages data, summarized in one page.  The
+        <strong>index.html</strong>
+        is the summary page, holding information on a high level.
+      </p>
+      <p>The workflow is like this:</p>
+      <p class="image">
+        <img class="center" src="/img/sitespeed.io-workflow.png"/>
+      </p>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="row-fluid">
+    <div class="span12">
+      <h2>Site summary page</h2>
+      <p>
+        Sitespeed.io created three different kind of outputs. The summary page is kind of executive summary page where green is good, yellow that you should look into it and red is bad, sometimes really bad. The page show yslow rule and a summary of some best practices. In the future, it will contain more fancy checks, today it is pretty simple.
+      </p>
+      <p class="image">
+        <img src="/img/summary.jpg"/>
+      </p>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="row-fluid">
+    <div class="span12">
+
+      <h2>Pages summary page</h2>
+      <p>
+        The pages page, show data collected for each page. At the moment the following data is showed: Number of javascript/ccs/images/cssimages & font files, total requests, total requests with a primed cache, the size of the page, the total size of the page (including all assets), total size with primed cache, the load time of the page, the yslow grade and a direct link to test the page at
+        <a href="http://webpagetest.org">http://webpagetest.org</a>
+        . Click the magnifier to see the response header of the page, and click the url, to see all the specific collected page data.
+      </p>
+      <p class="image">
+        <img src="/img/pages.jpg"/>
+
+      </p>
+
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="row-fluid">
+    <div class="span12">
+      <h2>Page output</h2>
+      Every page that is tested, also get a corresponding html page, where (almost) all data is shown. You will see all Yslow rules that are below 100, all assets on the page together with the response headers for that asset (click on the magnifier).
+    </p>
+    <p class="image">
+      <img src="/img/page.jpg"/>
+
+    </div>
+  </div>
+</div>
