@@ -20,13 +20,21 @@ text-align: center;
   border-bottom-left-radius:6px;
 }
 
+.container-fluid.header {
+  padding-left:20px;
+  padding-right:20px;
+  padding-bottom:0px;
+  margin-bottom:0px;
+}
+
 .container-fluid {
   margin-left:auto;
   margin-right:auto;
-  width:920px;
+  width:940px;
   margin-bottom:20px;
   padding:20px;
 }
+
 
 
 
