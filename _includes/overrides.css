@@ -13,12 +13,13 @@ text-align: center;
 }
 
 .page {
- border:1px solid rgba(0, 0, 0, 0.148438);
+  border:1px solid rgba(0, 0, 0, 0.148438);
   border-bottom-right-radius:6px;
   border-top-left-radius:6px;
   border-top-right-radius:6px;
   border-bottom-left-radius:6px;
 }
+
 
 .container-fluid.header {
   padding-left:20px;
