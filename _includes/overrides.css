@@ -47,6 +47,11 @@ text-align: center;
   border:0px;
 }
 
+.container-fluid.header {
+  padding:0px;
+}
+
+
 body {
 margin-top:0px;
 margin-left:10px;
