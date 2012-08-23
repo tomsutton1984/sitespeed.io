@@ -22,10 +22,17 @@ text-align: center;
 
 
 .container-fluid.header {
-  padding-left:20px;
-  padding-right:20px;
+  padding-left:0px;
+  padding-right:0px;
   padding-bottom:0px;
-  margin-bottom:0px;
+  padding-top:0px
+  margin-bottom:10px;
+  margin-top:0px;
+  width:980px;
+}
+
+.navbar {
+margin-bottom:0px;
 }
 
 .container-fluid {
@@ -47,6 +54,10 @@ text-align: center;
   margin-bottom:10px;
   border:0px;
 }
+.container-fluid.header {
+  width:100%;
+}
+
 
 .container-fluid.header {
   padding:0px;
