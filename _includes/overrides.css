@@ -8,6 +8,10 @@ footer p {
     text-align: center;
 } 
 
+.navbar .nav > li {
+line-height:21px;
+}
+
 .image {
 text-align: center;
 }
