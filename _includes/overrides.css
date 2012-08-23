@@ -62,6 +62,16 @@ h2 {
   line-height:34px;
 }
 
+h3 {
+  font-size:18px;
+  line-height:34px;
+}
+
+
+h1 small {
+  font-size:18px;
+}
+
 .container-fluid { 
   width:100%;
   padding:0px;
