@@ -1,7 +1,7 @@
 ---
 layout: default
 title: The rules used for Sitespeed.io
-description: Sitespeed.io is a tool to help you optimize and analyze your web sites performance. Here are a list of the rules used.
+description: Sitespeed.io is a tool to help you optimize and analyze your web sites performance. Here are the list of the rules used when analyzing the site.
 author: Peter Hedenskog
 keywords: sitespeed.io, rules, wpo, fast, speed, web performance optimization
 nav: rules
@@ -13,46 +13,60 @@ nav: rules
 <div class="section">
   <div class="row-fluid">
     <div class="span12">
+     <p>
+    Sitespeed uses rules to decide if a page is optimized for performance. The rules are based on best practices.    
+    You can check the exact rules used
+    <a href="https://github.com/soulgalore/yslow/blob/master/src/common/rulesets/ruleset_sitespeed.js" target="_blank">here</a>.
+ 
+  </p>
       <h2>Modified Yslow rules</h2>
       <p>
-	 Sitespeed uses many yslow rules, you can read all about them here:
-	<a href="http://developer.yahoo.com/performance/rules.html">Yslow rules</a>
-  Less tolerate number of requests (max 2 js, 2 css and 3 css images) and no CDN rule.
+        Sitespeed uses many rules from Yslow (read about them
+        <a href="http://developer.yahoo.com/performance/rules.html" target="_blank">here</a>).
+        The only yslow rule that isn't used by sitespeed, is the CDN rule. Also the tolerance for number of request is less with sitespeed (max 2 js, 2 css and 3 css images).
       </p>
-<p>You can check the exact rules used <a href="https://github.com/soulgalore/yslow/blob/master/src/common/rulesets/ruleset_sitespeed.js" target="_blank">here</a>.
-</p>
 
-      </div>
-    </div>
+    </p>
+
   </div>
+</div>
+</div>
 
-  <div class="section">
-    <div class="row-fluid">
-      <div class="span12">
-        <h2>Sitespeed extra rules</h2>
+<div class="section">
+<div class="row-fluid">
+  <div class="span12">
+    <h3 id="cssprint">Do not load specific css for print</h3>
+    <p>
+      Loading a specific stylesheet for print, can block rendering in your browser (depending on version) and will for almost all browsers, block the onload event to fire (even though the print stylesheet isn't even used). You can read more about it
+      <a href="http://www.phpied.com/5-years-later-print-css-still-sucks/" target="_blank">here</a>.
+    </p>
 
-        <h3 id="cssprint">Do not load specific css for print</h3>
+    <h3 id="cssinheaddomain">Load CSS in head from document domain</h3>
+    <p>
+      CSS files in head, should be loaded from the same domain as the main document, in order to avoid DNS lookups. This is extra important for mobile.
+    </p>
 
-	  <h3 id="cssinheaddomain">Load CSS in head from document domain</h3>
-	<p>
-	  
-        </p>
-	
-	<h3 id="syncjsinhead">Never load JS synchronously in head</h3>
-        <p>
+    <h3 id="syncjsinhead">Never load JS synchronously in head</h3>
+    <p>
+      Javascript files should never be loaded synchronously in head, because it will block the rendering of the page.
+    </p>
 
-        </p>
+    <h3 id="avoidfonts">Avoid use of web fonts</h3>
+    <p>
+      Avoid use of webfonts because they will decrease the performance of the page. Read <a href="http://www.stevesouders.com/blog/2009/10/13/font-face-and-performance/">more</a>.
+    </p>
 
 
+    <p>There are also two rules borrowed from Stoyan Stefanov.</p>
+    
+    <h3>Load third party JS asynchronously</h3>
+    Always load third party javascript asynchronously. Third parties that will be checked are twitter, facebook, google (api, analythics, ajax), linkedin, disqus, pinterest & jquery. Read more about asynchronously third party scripts 
+    <a href="http://www.phpied.com/3PO#async" target="_blank">here</a>.
 
-	<h2>Stoyan Stefanov third party load async javascript rules</h2>
-	 
-<h3>Load 3rd party JS asyncrhonously</h3>
-<a href="http://www.phpied.com/3PO#async" target="_blank">http://www.phpied.com/3PO#async</a>
+    <h3>Load the third party JS only once</h3>
+    Make sure the third party javascripts are loaded only once. More info 
+    <a href="http://www.phpied.com/3PO#once" target="_blank">here</a>.
 
-<h3>Load the 3rd party JS only once</h3>
-<a href="http://www.phpied.com/3PO#once" target="_blank">http://www.phpied.com/3PO#once</a>
-
-      </div>
-    </div>
   </div>
+</div>
+</div>
