@@ -2,6 +2,11 @@ body {
  font-family: Tahoma, Impact, Verdana, sans-serif;
  font-size:16px;
  line-height:21px;
+/*
+ background-image:url(/img/first_aid_kit.png);
+ background-position:initial initial;
+ background-repeat:initial initial;
+*/
 }
 
 footer p {
@@ -27,6 +32,7 @@ text-align: center;
   border-top-left-radius:6px;
   border-top-right-radius:6px;
   border-bottom-left-radius:6px;
+  background-color:white;
 }
 
 
