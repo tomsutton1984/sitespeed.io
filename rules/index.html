@@ -19,20 +19,16 @@ nav: rules
     <a href="https://github.com/soulgalore/yslow/blob/master/src/common/rulesets/ruleset_sitespeed.js" target="_blank">here</a>.
  
   </p>
-      <h2>Modified Yslow rules</h2>
+      <h3>Modified Yslow rules</h3>
       <p>
         Sitespeed uses many rules from Yslow (read about them
         <a href="http://developer.yahoo.com/performance/rules.html" target="_blank">here</a>).
         The only yslow rule that isn't used by sitespeed, is the CDN rule. Also the tolerance for number of request is less with sitespeed (max 2 js, 2 css and 3 css images).
       </p>
 
-    </p>
-
   </div>
 </div>
-</div>
 
-<div class="section">
 <div class="row-fluid">
   <div class="span12">
     <h3 id="cssprint">Do not load specific css for print</h3>
@@ -48,24 +44,24 @@ nav: rules
 
     <h3 id="syncjsinhead">Never load JS synchronously in head</h3>
     <p>
-      Javascript files should never be loaded synchronously in head, because it will block the rendering of the page. Alternative version to yjsbottom rule, that don't seems to work with phantomjs.
+      Javascript files should never be loaded synchronously in head, because it will block the rendering of the page. Alternative version to <em>yjsbottom</em> rule, that don't seems to work with phantomjs.
     </p>
 
     <h3 id="avoidfonts">Avoid use of web fonts</h3>
     <p>
       Avoid use of webfonts because they will decrease the performance of the page. Read <a href="http://www.stevesouders.com/blog/2009/10/13/font-face-and-performance/">more</a>.
     </p>
+    </div>
+</div>
+<div class="row-fluid">
+  <div class="span12">
 
-
-    <p>There are also two rules borrowed from Stoyan Stefanov.</p>
-    
-    <h3>Load third party JS asynchronously</h3>
+     <h3>Load third party JS asynchronously</h3>
     Always load third party javascript asynchronously. Third parties that will be checked are twitter, facebook, google (api, analythics, ajax), linkedin, disqus, pinterest & jquery. Read more about asynchronously third party scripts 
-    <a href="http://www.phpied.com/3PO#async" target="_blank">here</a>.
+    <a href="http://www.phpied.com/3PO#async" target="_blank">here</a>. This rule is borrowed from Stoyan Stefanov.
 
     <h3>Load the third party JS only once</h3>
-    Make sure the third party javascripts are loaded only once. More info 
-    <a href="http://www.phpied.com/3PO#once" target="_blank">here</a>.
+    Make sure the third party javascripts are loaded only <a href="http://www.phpied.com/3PO#once" target="_blank">once</a>. Also borrowed from Stoyan Stefanov.
 
   </div>
 </div>
