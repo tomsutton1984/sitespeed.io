@@ -31,6 +31,14 @@ nav: rules
 
 <div class="row-fluid">
   <div class="span12">
+    <h3 id="spof">Frontend single point of failure</h3>
+    <p>
+      A page can be stopped to be loaded in the browser, if a single script or css couldn't be fetched (the white screen of death), and that is something you really want to avoid. Read more about it in <a href="http://www.stevesouders.com/blog/2010/06/01/frontend-spof/" target="_blank">this</a> great blog post by Steve Souders.
+    </p>
+     <h3 id="totalrequests">Low number of total requests</h3>
+    <p>Avoid have too many requests on your page. The more requests, the slower the page will be.
+    </p>
+
     <h3 id="cssprint">Do not load specific css for print</h3>
     <p>
       Loading a specific stylesheet for print, can block rendering in your browser (depending on version) and will for almost all browsers, block the onload event to fire (even though the print stylesheet isn't even used). You can read more about it
