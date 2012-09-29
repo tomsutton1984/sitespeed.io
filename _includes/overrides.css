@@ -2,12 +2,57 @@ body {
  font-family: Tahoma, Impact, Verdana, sans-serif;
  font-size:16px;
  line-height:21px;
-/*
- background-image:url(/img/first_aid_kit.png);
- background-position:initial initial;
- background-repeat:initial initial;
-*/
 }
+
+.logo {
+   padding: 0px; 
+   float: left; 
+   margin-left: -20px; 
+   border:0px;
+}
+
+.navbar .btn-navbar {
+	padding: 17px 20px;
+}
+
+.navbar .divider-vertical {
+border-left: 0px solid #0073b0;
+border-right: 0px solid #0073b0;
+margin: 0;
+}
+
+.navbar .nav > li > a {
+padding: 22px 20px 16px;
+color: white;
+text-shadow: 0 0px 0 black;
+font-size: 20px;
+}
+
+.navbar .nav > .active > a, .navbar .nav > .active > a:hover, .navbar .nav > .active > a:focus {
+color: white;
+background-color: #0073b0;
+}
+
+.navbar .nav > li > a:focus, .navbar .nav > li > a:hover {
+color: white;
+background-color: #0095d2;
+}
+
+.navbar .nav > li {
+line-height: 30px;
+}
+
+.navbar .divider-vertical {
+height: 60px;
+}
+
+.navbar-inner {
+background-image: none;
+background-color: #0095d2;
+border: 0px;
+webkit-border-radius:0px;
+}
+
 
 footer p {
     text-align: center;
@@ -35,15 +80,24 @@ text-align: center;
   background-color:white;
 }
 
-
 .container-fluid.header {
   padding-left:0px;
   padding-right:0px;
   padding-bottom:0px;
   padding-top:0px
-  margin-bottom:10px;
+  margin-bottom:0px;
   margin-top:0px;
   width:980px;
+}
+
+.container-fluid.page {
+margin-bottom:20px;
+}
+
+.page {
+border-top-left-radius: 0px;
+border-top-right-radius: 0px;
+border-top:0px;
 }
 
 .navbar {
@@ -54,7 +108,7 @@ margin-bottom:0px;
   margin-left:auto;
   margin-right:auto;
   width:940px;
-  margin-bottom:20px;
+  margin-bottom:0px;
   padding:20px;
 }
 
@@ -86,7 +140,7 @@ h1 small {
 .container-fluid { 
   width:100%;
   padding:0px;
-  margin-bottom:10px;
+  margin-bottom:0px;
   border:0px;
 }
 .container-fluid.header {
