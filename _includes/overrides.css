@@ -1,18 +1,19 @@
 body {
  font-family: Tahoma, Impact, Verdana, sans-serif;
  font-size:16px;
- line-height:21px;
 }
 
 .logo {
-   padding: 0px; 
+   padding-top: 10px;
+   padding-bottom: 10px; 
+   padding-left: 10px;
    float: left; 
    margin-left: -20px; 
    border:0px;
 }
 
 .navbar .btn-navbar {
-	padding: 17px 20px;
+	padding: 26px 20px;
 }
 
 .navbar .divider-vertical {
@@ -39,7 +40,7 @@ background-color: #0095d2;
 }
 
 .navbar .nav > li {
-line-height: 30px;
+line-height: 41px;
 }
 
 .navbar .divider-vertical {
@@ -58,10 +59,6 @@ border-radius: 0px;
 footer p {
     text-align: center;
 } 
-
-.navbar .nav > li {
-line-height:21px;
-}
 
 .image {
 text-align: center;
