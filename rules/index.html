@@ -21,9 +21,9 @@ nav: rules
   </p>
       <h3>Modified Yslow rules</h3>
       <p>
-        Sitespeed uses many rules from Yslow (read about them
+        Sitespeed uses many basic rules from Yslow (read about them
         <a href="http://developer.yahoo.com/performance/rules.html" target="_blank">here</a>).
-        The only yslow rule that isn't used by sitespeed, is the CDN rule. Also the tolerance for number of request is less with sitespeed (max 2 js, 2 css and 3 css images).
+        The CDN rule is removed (not considered to be so important), the favicon cashing rule is not used (because of a bug in phantomjs making it not work). Also the tolerance for number of request is less with sitespeed.
       </p>
 
   </div>
@@ -34,6 +34,8 @@ nav: rules
     <h3 id="spof">Frontend single point of failure</h3>
     <p>
       A page can be stopped to be loaded in the browser, if a single script or css couldn't be fetched (the white screen of death), and that is something you really want to avoid. Read more about it in <a href="http://www.stevesouders.com/blog/2010/06/01/frontend-spof/" target="_blank">this</a> great blog post by Steve Souders.
+    </p>
+    <p>One important note, right now this rule treats domain and subdomains as ok, that match the document domain, all other domains is treated as a spof.
     </p>
      <h3 id="totalrequests">Low number of total requests</h3>
     <p>Avoid have too many requests on your page. The more requests, the slower the page will be.
