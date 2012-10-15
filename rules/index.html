@@ -33,7 +33,7 @@ nav: rules
   <div class="span12">
     <h3 id="spof">Frontend single point of failure</h3>
     <p>
-      A page can be stopped to be loaded in the browser, if a single script or css couldn't be fetched (the white screen of death), and that is something you really want to avoid. Read more about it in <a href="http://www.stevesouders.com/blog/2010/06/01/frontend-spof/" target="_blank">this</a> great blog post by Steve Souders.
+      A page can be stopped to be loaded in the browser, if a single script or css couldn't be fetched (the white screen of death), and that is something you really want to avoid. Never load 3rd party components inside of head! Read more about it in <a href="http://www.stevesouders.com/blog/2010/06/01/frontend-spof/" target="_blank">this</a> great blog post by Steve Souders.
     </p>
     <p>One important note, right now this rule treats domain and subdomains as ok, that match the document domain, all other domains is treated as a spof.
     </p>
