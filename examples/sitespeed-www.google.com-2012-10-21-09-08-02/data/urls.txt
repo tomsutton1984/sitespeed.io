@@ -1,0 +1,6 @@
+http://www.google.com/preferences?hl=sv
+http://www.google.com/language_tools?hl=sv&authuser=0
+http://www.google.com/intl/sv/about.html
+http://www.google.com/advanced_search?hl=sv&authuser=0
+http://www.google.com/intl/sv/policies/
+http://www.google.com/intl/sv/ads/
