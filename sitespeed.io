@@ -137,7 +137,7 @@ fi
 # Switch to my dir
 cd "$(dirname ${BASH_SOURCE[0]})"
 
-NOW=$(date +"%Y-%m-%d_%H%M%S")
+NOW=$(date +"%Y/%m/%d/%H%M%S")
 DATE=$(date) 
 
 echo "Will crawl from start point $URL with depth $DEPTH $FOLLOW_PATH $NOT_IN_URL ... this can take a while<br/>"
@@ -147,8 +147,8 @@ NOPROTOCOL=${URL#*//}
 HOST=${NOPROTOCOL%%/*}
 
 # Setup dirs                                                                                                                                                                    
-HOST_DIR="sitespeed-result/$HOST"
-REPORT_DIR="sitespeed-result/$HOST/$NOW"
+HOST_DIR="sitespeed-result/$NOW"
+REPORT_DIR="sitespeed-result/$NOW/$HOST"
 REPORT_DATA_DIR="$REPORT_DIR/data"
 REPORT_PAGES_DIR="$REPORT_DIR/pages"
 REPORT_DATA_PAGES_DIR="$REPORT_DATA_DIR/pages"
@@ -157,6 +157,7 @@ mkdir $REPORT_DATA_DIR
 mkdir $REPORT_PAGES_DIR
 mkdir $REPORT_DATA_PAGES_DIR
 cp /var/www/sitespeed-result/index.php $HOST_DIR/index.php
+cp /var/www/result.php $REPORT_DIR/result.php
 
 java -Xmx256m -Xms256m -cp dependencies/crawler-0.9.3-full.jar com.soulgalore.crawler.run.CrawlToFile -u $URL -l $DEPTH $FOLLOW_PATH $NOT_IN_URL -f $REPORT_DATA_DIR/urls.txt -ef $REPORT_DATA_DIR/nonworkingurls.txt
 

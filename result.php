@@ -77,7 +77,7 @@
     <div class="navbar-inner">
       <div class="container">
 
-        <img src="report/img/sitespeed-logo.gif" class="logo"/>
+        <img src="/report/img/sitespeed-logo.gif" class="logo"/>
          <!-- <a class="brand" href="#" title="How speedy is your site?">sitespeed.io</a>-->
         <div class="nav-collapse">
           <ul class="nav">
@@ -125,14 +125,6 @@ setInterval(function(){
   <script src="/report/js/jquery-1.8.2.min.js"></script>
   <script src="/report/js/bootstrap.min.js"></script>
   <script src="/report/js/jquery.tablesorter.min.js"></script>
-
-<script>
-
-$(function ()
-{ $("a[rel=popover]").popover();
-});
-
-</script>
 
 </body>
 </html>
