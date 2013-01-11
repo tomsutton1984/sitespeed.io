@@ -1,7 +1,15 @@
 ## Limits & rules macros
 ##
 
-## Verify the Yslow score, over 90 is good
+## These classes are lining in the velocity universe
+## $math org.apache.velocity.tools.generic.MathTool
+## $esc org.apache.velocity.tools.generic.EscapeTool
+## $host com.soulgalore.velocity.HostTool
+## $stats org.apache.commons.math3.stat.descriptive.DescriptiveStatistics
+## $document org.jdom2.Document
+
+
+## Verify the Sitespeed/Yslow score, over 90 is good
 #macro( scoreType $score )
 #if ($score>89.99)success#elseif ($score>80)
 warning#else
@@ -60,9 +68,10 @@ warning#else
 error#end#end
 
 ## Verify the doc weight, needs to be small for mobile, should also 
-## take inconcideration total weight. 
+## take inconcideration total weight.
+## in the future when we can check gzip, these values should be smaller 
 #macro ( weightMobileType $weight )
-#if ($weight<10000)success#elseif ($weight<15000)
+#if ($weight<100000)success#elseif ($weight<150000)
 warning#else
 error#end#end
 
@@ -75,6 +84,12 @@ success#end#end
 #macro ( totalJsSyncInHeadType $js )
 #if ($js<1)success#else
 error#end#end        
+
+## The percent of javascript with HTML
+#macro ( percentageJavascriptOnPageType $averagePercent )
+#if ($averagePercent<50)success#elseif ($averagePercent>75)
+error#else
+warning#end#end
 
 ## Verify assets without far expires date
 #macro ( expiresType $expires )

@@ -32,15 +32,19 @@ help()
 cat << EOF
 usage: $0 options
 
-Sitespeed is a tool that helps you analyze your sites web performance and show you what you should optimize, more info at http://sitespeed.io
+Sitespeed is a tool that helps you analyze your website performance and show you what you should optimize, more info at http://sitespeed.io
 
 OPTIONS:
-   -h      Get help.
+   -h      Help
    -u      The start url for the test: http[s]://host[:port][/path/]
    -d      The crawl depth, default is 1 [optional]
    -f      Crawl only on this path [optional]
    -s      Skip urls that contains this in the path [optional]
    -p      The number of processes that will analyze pages, default is 5 [optional]
+   -m      The memory heap size for the java applications, default is 256 kb [optional]
+   -o      The output format, always output as html but you can add images and/or csv (img,csv) [optional]
+   -r      The result base directory, default is sitespeed-result [optional]
+   -z      Create a tar zip file of the result files, default is false [optional]
 EOF
 }
 
@@ -48,18 +52,14 @@ EOF
 # Analyze function, call it to analyze a page
 # $1 the url to analyze
 # $2 the filename of that tested page
-# $3 the directory of where to put the data files
-# $4 the directory for the final page reports
 #*******************************************************
 analyze() {
     # setup the parameters, same names maybe makes it easier
     url=$1
     pagefilename=$2
-    REPORT_DATA_PAGES_DIR=$3
-    REPORT_PAGES_DIR=$4
-
-    echo "Analyzing $url<br/>"
-    phantomjs-1.7.0/bin/phantomjs dependencies/yslow-3.1.4-sitespeed.js -d -r sitespeed.io-1.2 -f xml "$url" >"$REPORT_DATA_PAGES_DIR/$pagefilename.xml" || exit 1
+  
+    echo "Analyzing $url <br>"
+    phantomjs-1.7.0/bin/phantomjs dependencies/yslow-3.1.4-sitespeed.js -d -r sitespeed.io-1.4 -f xml "$url" >"$REPORT_DATA_PAGES_DIR/$pagefilename.xml" || exit 1
  
     # Sometimes the yslow script adds output before the xml tag, should probably be reported ...
     sed '/<?xml/,$!d' $REPORT_DATA_PAGES_DIR/$pagefilename.xml > $REPORT_DATA_PAGES_DIR/$pagefilename-bup  || exit 1
@@ -70,21 +70,26 @@ analyze() {
     # Hack for adding link to the output file name
     sed 's/<results>/<results filename="'$pagefilename'">/g' $REPORT_DATA_PAGES_DIR/$pagefilename.xml > $REPORT_DATA_PAGES_DIR/$pagefilename-bup || exit 1
     mv $REPORT_DATA_PAGES_DIR/$pagefilename-bup $REPORT_DATA_PAGES_DIR/$pagefilename.xml
- 
-    java -Xmx256m -Xms256m -jar dependencies/xml-velocity-1.1-full.jar $REPORT_DATA_PAGES_DIR/$pagefilename.xml report/velocity/page.vm report/properties/page.properties $REPORT_PAGES_DIR/$pagefilename.html || exit 1    
+   
+    $JAVA -Xmx"$JAVA_HEAP"m -Xms"$JAVA_HEAP"m -jar $DEPENDENCIES_DIR/$VELOCITY_JAR $REPORT_DATA_PAGES_DIR/$pagefilename.xml $VELOCITY_DIR/page.vm $PROPERTIES_DIR/page.properties $REPORT_PAGES_DIR/$pagefilename.html || exit 1
 
+    $JAVA -jar $DEPENDENCIES_DIR/$HTMLCOMPRESSOR_JAR --type html --compress-css --compress-js -o $REPORT_PAGES_DIR/$pagefilename.html $REPORT_PAGES_DIR/$pagefilename.html
+   
 }
 
-
-# All the options
+# All the options that you can configure when you run the script
 URL=
 DEPTH=
 FOLLOW_PATH=
 NOT_IN_URL=
 MAX_PROCESSES=
+OUTPUT_FORMAT=
+JAVA_HEAP=
+REPORT_BASE_DIR=
+CREATE_TAR_ZIP=false
 
 # Set options
-while getopts “hu:d:f:s:p:” OPTION
+while getopts “hu:d:f:s:o:m:p:r:z:” OPTION
 do
      case $OPTION in
          h)
@@ -94,8 +99,12 @@ do
          u)URL=$OPTARG;;
          d)DEPTH=$OPTARG;;
          f)FOLLOW_PATH=$OPTARG;;
-         s)NOT_IN_URL=$OPTARG;;    
-         p)MAX_PROCESSES=$OPTARG;; 
+         s)NOT_IN_URL=$OPTARG;;   
+         o)OUTPUT_FORMAT=$OPTARG;;  
+         m)JAVA_HEAP==$OPTARG;;  
+         p)MAX_PROCESSES=$OPTARG;;
+         r)REPORT_BASE_DIR=$OPTARG;;
+         z)CREATE_TAR_ZIP=$OPTARG;;
          ?)
              help
              exit
@@ -104,6 +113,7 @@ do
 done
 
 # Verify that all options needed exists & set default values for missing ones
+
 if [[ -z $URL ]] 
 then
      help
@@ -113,6 +123,11 @@ fi
 if [[ -z $DEPTH ]] 
 then
      DEPTH="1"
+fi
+
+if [[ -z $JAVA_HEAP ]] 
+then
+     JAVA_HEAP="256"
 fi
 
 if [[ -z $MAX_PROCESSES ]] 
@@ -134,6 +149,40 @@ else
     NOT_IN_URL=""
 fi
 
+if [[ "$OUTPUT_FORMAT" == *csv* ]]
+  then 
+  OUTPUT_CSV=true
+else
+   OUTPUT_CSV=false
+fi  
+
+if [[ "$OUTPUT_FORMAT" == *img* ]]
+  then 
+  OUTPUT_IMAGES=true
+else
+   OUTPUT_IMAGES=false
+fi  
+
+if [[ -z $OUTPUT_IMAGES ]] 
+  then
+  OUTPUT_IMAGES=false
+fi
+
+if [[ -z $REPORT_BASE_DIR ]] 
+then
+     REPORT_BASE_DIR="sitespeed-result"
+fi
+
+# FInished verify the input
+
+# Respect JAVA_HOME if set
+if [[ -n "$JAVA_HOME" ]] && [[ -x "$JAVA_HOME/bin/java" ]]
+then
+    JAVA="$JAVA_HOME/bin/java"
+else
+    JAVA="java"
+fi
+
 # Switch to my dir
 cd "$(dirname ${BASH_SOURCE[0]})"
 
@@ -146,24 +195,42 @@ echo "Will crawl from start point $URL with depth $DEPTH $FOLLOW_PATH $NOT_IN_UR
 NOPROTOCOL=${URL#*//}
 HOST=${NOPROTOCOL%%/*}
 
-# Setup dirs                                                                                                                                                                    
-HOST_DIR="sitespeed-result/$NOW"
-REPORT_DIR="sitespeed-result/$NOW/$HOST"
-REPORT_DATA_DIR="$REPORT_DIR/data"
-REPORT_PAGES_DIR="$REPORT_DIR/pages"
-REPORT_DATA_PAGES_DIR="$REPORT_DATA_DIR/pages"
+# Jar files
+CRAWLER_JAR=crawler-1.0-full.jar
+VELOCITY_JAR=xml-velocity-1.3-full.jar
+HTMLCOMPRESSOR_JAR=htmlcompressor-1.5.3.jar
+
+# Setup dirs                                                                                                                                                             
+DEPENDENCIES_DIR="dependencies"
+
+HOST_DIR="sitespeed-result/$HOST"
+REPORT_DIR_NAME=$NOW/$HOST
+REPORT_DIR=$REPORT_BASE_DIR/$REPORT_DIR_NAME
+REPORT_DATA_DIR=$REPORT_DIR/data
+REPORT_PAGES_DIR=$REPORT_DIR/pages
+REPORT_DATA_PAGES_DIR=$REPORT_DATA_DIR/pages
+REPORT_IMAGE_PAGES_DIR=$REPORT_DIR/images
+VELOCITY_DIR=report/velocity
+PROPERTIES_DIR=report/properties
+
 mkdir -p $REPORT_DIR
 mkdir $REPORT_DATA_DIR
 mkdir $REPORT_PAGES_DIR
 mkdir $REPORT_DATA_PAGES_DIR
-cp /var/www/sitespeed-result/index.php $HOST_DIR/index.php
+if $OUTPUT_IMAGES 
+  then
+  mkdir $REPORT_IMAGE_PAGES_DIR
+fi
+
+cp /var/www/sitespeed-result/index.php /sitespeed-result/$REPORT_DIR_NAME/index.php
 cp /var/www/result.php $REPORT_DIR/result.php
 
-java -Xmx256m -Xms256m -cp dependencies/crawler-0.9.3-full.jar com.soulgalore.crawler.run.CrawlToFile -u $URL -l $DEPTH $FOLLOW_PATH $NOT_IN_URL -f $REPORT_DATA_DIR/urls.txt -ef $REPORT_DATA_DIR/nonworkingurls.txt
+
+$JAVA -Xmx"$JAVA_HEAP"m -Xms"$JAVA_HEAP"m -cp $DEPENDENCIES_DIR/$CRAWLER_JAR com.soulgalore.crawler.run.CrawlToFile -u $URL -l $DEPTH $FOLLOW_PATH $NOT_IN_URL -f $REPORT_DATA_DIR/urls.txt -ef $REPORT_DATA_DIR/nonworkingurls.txt
 
 if [ ! -e $REPORT_DATA_DIR/urls.txt ];
 then
-echo "No url:s were fetched<br/>"
+echo "No url:s were fetched"
 exit 0
 fi
 
@@ -177,12 +244,15 @@ let "estimate = ${#result[@]}/3"
 
 echo "<br/><br/>Fetched ${#result[@]} pages<br/> Estimated time to crawl" $estimate "minutes<br/><br/>" 
 
+
+echo "Fetched ${#result[@]} pages<br>" 
+
 # Setup start parameters, 0 jobs are running and the first file name
 JOBS=0
 PAGEFILENAME=1
 
 for page in "${result[@]}"
-do analyze $page $PAGEFILENAME $REPORT_DATA_PAGES_DIR $REPORT_PAGES_DIR  &
+do analyze $page $PAGEFILENAME &
     PAGEFILENAME=$[$PAGEFILENAME+1]
     JOBS=$[$JOBS+1]
     if [ "$JOBS" -ge "$MAX_PROCESSES" ]
@@ -195,7 +265,7 @@ done
 # make sure all processes has finished
 wait
 
-echo "<br/>Create result.xml<br/>"
+echo "Create result.xml<br>"
 
 echo '<?xml version="1.0" encoding="UTF-8"?><document host="'$HOST'" url="'$URL'" date="'$DATE'">' > $REPORT_DATA_DIR/result.xml
 for file in $REPORT_DATA_PAGES_DIR/*
@@ -208,31 +278,56 @@ do
 done 
 echo '</document>'>> "$REPORT_DATA_DIR/result.xml"
 
-echo 'Create the pages.html<br/>'
-java -Xmx256m -Xms256m -jar dependencies/xml-velocity-1.1-full.jar $REPORT_DATA_DIR/result.xml report/velocity/pages.vm report/properties/pages.properties $REPORT_DIR/pages.html || exit 1
+echo 'Create the pages.html<br>'
+$JAVA -Xmx"$JAVA_HEAP"m -Xms"$JAVA_HEAP"m -jar $DEPENDENCIES_DIR/$VELOCITY_JAR $REPORT_DATA_DIR/result.xml $VELOCITY_DIR/pages.vm $PROPERTIES_DIR/pages.properties $REPORT_DIR/pages.html || exit 1
+$JAVA -jar $DEPENDENCIES_DIR/$HTMLCOMPRESSOR_JAR --type html --compress-css --compress-js -o $REPORT_DIR/pages.html $REPORT_DIR/pages.html
 
-echo 'Create the summary index.html<br/>'
-java -Xmx256m -Xms256m -jar dependencies/xml-velocity-1.1-full.jar $REPORT_DATA_DIR/result.xml report/velocity/summary.vm report/properties/summary.properties $REPORT_DIR/index.html || exit 1
 
-echo 'Create the rules.html<br/>'
-java -Xmx256m -Xms256m -jar dependencies/xml-velocity-1.1-full.jar $REPORT_DATA_PAGES_DIR/1.xml report/velocity/rules.vm report/properties/rules.properties $REPORT_DIR/rules.html || exit 1
+echo 'Create the summary index.html<br>'
+$JAVA -Xmx"$JAVA_HEAP"m -Xms"$JAVA_HEAP"m -jar $DEPENDENCIES_DIR/$VELOCITY_JAR $REPORT_DATA_DIR/result.xml $VELOCITY_DIR/summary.vm $PROPERTIES_DIR/summary.properties $REPORT_DIR/index.html || exit 1
+$JAVA -jar $DEPENDENCIES_DIR/$HTMLCOMPRESSOR_JAR --type html --compress-css --compress-js -o $REPORT_DIR/index.html $REPORT_DIR/index.html
 
+echo 'Create the rules.html<br>'
+$JAVA -Xmx"$JAVA_HEAP"m -Xms"$JAVA_HEAP"m -jar $DEPENDENCIES_DIR/$VELOCITY_JAR $REPORT_DATA_PAGES_DIR/1.xml $VELOCITY_DIR/rules.vm $PROPERTIES_DIR/rules.properties $REPORT_DIR/rules.html || exit 1
+$JAVA -jar $DEPENDENCIES_DIR/$HTMLCOMPRESSOR_JAR --type html --compress-css --compress-js -o $REPORT_DIR/rules.html $REPORT_DIR/rules.html
 
 #copy the rest of the files
 mkdir $REPORT_DIR/css
 mkdir $REPORT_DIR/js
 mkdir $REPORT_DIR/img
 
-cp report/css/* $REPORT_DIR/css
-cp report/js/* $REPORT_DIR/js
-cp report/img/* $REPORT_DIR/img
+cat "$BASE_DIR"report/css/bootstrap.min.css > $REPORT_DIR/css/styles.css
+cat "$BASE_DIR"report/js/jquery-1.8.3.min.js report/js/bootstrap.min.js report/js/jquery.tablesorter.min.js > $REPORT_DIR/js/all.js
+cp "$BASE_DIR"report/img/* $REPORT_DIR/img
 
-echo 'Create summary png:s<br/><br/>'
-# create images, easy to use in reports etc
-phantomjs-1.7.0/bin/phantomjs dependencies/rasterize.js $REPORT_DIR/index.html $REPORT_DIR/summary.png
-phantomjs-1.7.0/bin/phantomjs dependencies/rasterize.js $REPORT_DIR/pages.html $REPORT_DIR/pages.png
+if $OUTPUT_CSV
+  then
+   echo 'Create csv file' 
+  $JAVA -Xmx"$JAVA_HEAP"m -Xms"$JAVA_HEAP"m -jar $DEPENDENCIES_DIR/$VELOCITY_JAR $REPORT_DATA_DIR/result.xml $VELOCITY_DIR/pages-csv.vm $PROPERTIES_DIR/pages.properties $REPORT_DIR/pages.csv || exit 1
+fi
+
+if $OUTPUT_IMAGES 
+  then
+  echo 'Create all png:s'
+ 
+  phantomjs-1.7.0/bin/phantomjs $DEPENDENCIES_DIR/rasterize.js $REPORT_DIR/index.html $REPORT_IMAGE_PAGES_DIR/summary.png
+  phantomjs-1.7.0/bin/phantomjs $DEPENDENCIES_DIR/rasterize.js $REPORT_DIR/pages.html $REPORT_IMAGE_PAGES_DIR/pages.png
+
+  for file in $REPORT_PAGES_DIR/*
+  do
+    filename=$(basename $file .html)
+    phantomjs-1.7.0/bin/phantomjs $DEPENDENCIES_DIR/rasterize.js $file $REPORT_IMAGE_PAGES_DIR/$filename.png
+  done
+fi
+
+if $CREATE_TAR_ZIP
+    then
+      echo "Creating zip file"
+      tar -cf $REPORT_DIR_NAME.tar $REPORT_DIR 
+      gzip $REPORT_DIR_NAME.tar
+    fi
 
 echo "<br/><br/>Finished, see the report <a href='/$REPORT_DIR/index.html'>here</a><br/>"
-echo "View a printable crawl summary <a href='/$REPORT_DIR/summary.png'>here</a><br/>"
-echo "View a printable summary table <a href='/$REPORT_DIR/pages.png'>here</a>"
+	
+echo "Finished"
 exit 0
